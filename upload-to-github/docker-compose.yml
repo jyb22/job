@@ -1,0 +1,19 @@
+# docker compose up -d --build
+# Secrets come from .env (copy .env.example). Data lives in the named volume.
+services:
+  resale-ops:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      DATA_DIR: /data
+      NODE_ENV: production
+    ports:
+      # Bound to localhost: put a TLS-terminating reverse proxy in front for remote access.
+      - "127.0.0.1:4000:4000"
+    volumes:
+      - resale-ops-data:/data
+
+volumes:
+  resale-ops-data:
